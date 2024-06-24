@@ -2,6 +2,8 @@
 	//import Graduation from '$lib/img/Graduation_(album).jpg';
 	import hmhas from '$lib/img/download.jpg';
 	import hmhasCode from '$lib/img/spotify_album_7aJuG4TFXa2hmE4z1yxc3n.png';
+	import { onMount } from 'svelte';
+	import tilt from 'vanilla-tilt';
 
 	let tracklist = [
 		'Skinny',
@@ -25,10 +27,21 @@
 		'Bittersuite',
 		'Blue'
 	];
-	console.log(tracklist[90]);
+
+	let poster: HTMLElement | HTMLElement[];
+
+	onMount(() =>
+		tilt.init(poster, {
+			max: 10,
+			speed: 1000,
+			reverse: true,
+			glare: true,
+			'max-glare': 0.6
+		})
+	);
 </script>
 
-<div class="paper-a4 flex scale-75 flex-col bg-[#FFFCF0] font-instrument drop-shadow">
+<div bind:this={poster} class="paper-a4 m-8 flex flex-col bg-[#FFFCF0] font-instrument drop-shadow">
 	<img src={hmhas} class="mb-[4mm] aspect-square w-full" alt="" />
 	<span class="ptxt-title line-clamp-1 overflow-ellipsis font-bold italic"
 		>HIT ME HARD AND SOFT</span
