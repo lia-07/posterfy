@@ -57,9 +57,12 @@
 </script>
 
 <div class="flex h-full w-full items-center justify-center">
-	<div bind:this={posterPreviewElement} class="w-[30rem] overflow-clip rounded-md drop-shadow-xl">
+	<div
+		bind:this={posterPreviewElement}
+		class="asepct-[1/1.41] w-[30rem] overflow-clip rounded-md drop-shadow-xl"
+	>
 		{#if posterPreview}
-			<img class="h-full" src={posterPreview} alt="Preview" />
+			<img class="w-full" src={posterPreview} alt="Preview" />
 		{/if}
 	</div>
 </div>
