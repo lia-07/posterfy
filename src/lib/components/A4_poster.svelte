@@ -1,14 +1,18 @@
 <script lang="ts">
 	import type { Album } from '@spotify/web-api-ts-sdk';
 
-	import { onMount } from 'svelte';
+	import { prominent } from 'color.js';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let hidden = false;
 	export let html;
 
 	export let album: Album;
 
-	onMount(() => {
+	let dispatch = createEventDispatcher();
+	let dominantColours = ['#ccc', '#ccc', '#ccc'];
+
+	onMount(async () => {
 		let tracklist: string[] = album.tracks.items.map((track) => track.name);
 		chunkedTracklist = [];
 		for (let i = 0; i < tracklist.length; i += 7) {
@@ -16,31 +20,58 @@
 				chunkedTracklist.push(tracklist.slice(i, i + 7));
 			}
 		}
+		prominent(album.images[0].url, { amount: 3, format: 'hex', group: 50 }).then((color) => {
+			if (Array.isArray(color) && color.every((item) => typeof item === 'string')) {
+				console.log(color);
+				dominantColours = color;
+			} else if (typeof color == 'string') {
+				dominantColours = dominantColours.fill(color);
+			}
+			console.log(dominantColours[1]);
+			dispatch('rerender');
+		});
 	});
 
 	let chunkedTracklist: any[] = [];
+
+	let img: HTMLImageElement;
 </script>
 
 <div class={hidden ? 'pointer-events-none absolute -top-[297mm] -z-50' : ''}>
 	<div
 		bind:this={html}
-		class=" flex h-[297mm] w-[210mm] flex-col bg-[#FFFCF0] px-[16mm] py-[12mm] font-instrument"
+		class=" flex h-[297mm] w-[210mm] flex-col bg-[#FFFCF0] px-[18mm] py-[12mm] font-instrument"
 	>
-		<img src={album.images[0].url} class="mb-[2mm] aspect-square w-full" alt="" />
-		<span class="ptxt-title text-ellipses line-clamp-1 text-[16mm] font-bold italic leading-[18mm]"
-			>{album.name}</span
-		>
-		<div class="flex items-end justify-between">
+		<div class="flex h-[196mm] flex-col items-start gap-[3mm]">
+			<div class="aspect-square min-h-0 flex-shrink flex-grow overflow-hidden">
+				<img
+					alt="Alb"
+					bind:this={img}
+					src={album.images[0].url}
+					class="h-full w-full object-cover"
+				/>
+			</div>
+
+			<span
+				class=" -mb-[6mm] -ml-[5mm] w-full pb-[6mm] pl-[4mm] text-[16mm] font-bold italic leading-[18mm]"
+				>{album.name}</span
+			>
+		</div>
+
+		<div class=" flex items-end justify-between">
 			<div class="flex h-fit items-end gap-[4mm] pt-[2mm]">
 				<div class="flex h-[8mm] gap-[1mm]">
-					<div class="aspect-square h-full bg-[#041222]"></div>
-					<div class="aspect-square h-full bg-[#032850]"></div>
-					<div class="aspect-square h-full bg-[#6A7064]"></div>
+					<div class="aspect-square h-full" style="background-color: {dominantColours[0]};"></div>
+					<div class="aspect-square h-full" style="background-color: {dominantColours[1]};"></div>
+					<div class="aspect-square h-full" style="background-color: {dominantColours[2]};"></div>
 				</div>
-				<div class="flex gap-[2mm] text-[8mm] leading-[8mm]">
-					<span class=" line-clamp-1 w-fit max-w-[90mm] overflow-ellipsis break-words"
-						>{album.artists[0].name}</span
-					><span class=""> &mdash; {album.release_date.substring(0, 4)}</span>
+				<div class=" text-[7mm] leading-[7mm]">
+					<span
+						class=" -mb-[2mm] line-clamp-1 w-fit max-w-[90mm] overflow-ellipsis break-words pb-[2mm]"
+					>
+						{album.release_date.substring(0, 4)}
+						{album.album_type} &mdash; {album.artists[0].name}</span
+					>
 				</div>
 			</div>
 			<span class="text-[7mm] italic opacity-80"
@@ -58,27 +89,34 @@
 							class="line-clamp-1 flex-1 overflow-clip [&>*]:line-clamp-1 [&>*]:overflow-ellipsis"
 						>
 							{#if i === 4 && j === 6 && album.total_tracks > 35}
-								<!-- content here -->
 								<span class="italic">...{album.total_tracks - 34} more</span>
 							{:else}
-								<p>{j + i * 7 + 1}. {track}</p>
+								<p>{j + i * 7 + 1}. {track.replace(/ \(feat\..*?\)$/, '')}</p>
 							{/if}
 						</div>
 					{/each}
 				</div>
 			{/each}
 		</div>
-		<div class=" flex h-max flex-1 items-end justify-between">
+		<div class=" flex h-max flex-1 items-end justify-between gap-[6mm]">
 			<div
-				class="max-w-[100mm] font-sans text-[3.5mm] leading-[4mm] opacity-60 [&>*]:line-clamp-1 [&>*]:text-ellipsis"
+				class="flex h-[12mm] w-1/2 flex-col justify-end gap-0 font-sans text-[3mm] leading-[3mm] opacity-50 [&>*]:text-ellipsis"
 			>
-				<span>{album.copyrights[0].text}</span>
+				<span class="line-clamp-2 text-ellipsis">{album.copyrights[0].text}</span>
 				<span>Content sourced from Spotify.</span>
 			</div>
+
 			<img
 				src={`
-https://scannables.scdn.co/uri/plain/png/041222/white/640/${album.uri}`}
-				class="w-[45mm]"
+https://scannables.scdn.co/uri/plain/png/${dominantColours
+					.reduce((darkest, color) =>
+						dominantColours.reduce((sum, c) => sum + parseInt(c.slice(1), 16), 0) <
+						dominantColours.reduce((sum, c) => sum + parseInt(darkest.slice(1), 16), 0)
+							? color
+							: darkest
+					)
+					.substring(1, 7)}/white/640/${album.uri}`}
+				class="h-[12mm]"
 				alt=""
 			/>
 		</div>

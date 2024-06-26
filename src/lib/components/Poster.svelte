@@ -1,21 +1,27 @@
 <script lang="ts">
+	import PosterElement from '$lib/components/A4_poster.svelte';
+
+	import type { Album } from '@spotify/web-api-ts-sdk';
+
+	export let album: Album;
+
+	let posterElement: HTMLElement;
+
 	import { toPng } from 'html-to-image';
 	import { onMount } from 'svelte';
 	import tilt from 'vanilla-tilt';
-
-	export let originalPoster: HTMLElement;
 
 	let posterPreview: string;
 	let posterPreviewContainer: HTMLElement;
 
 	function updatePoster() {
-		toPng(originalPoster).then((png) => {
+		toPng(posterElement).then((png) => {
 			posterPreview = png;
 		});
 	}
 
-	$: if (originalPoster) {
-		toPng(originalPoster).then((png) => {
+	$: if (posterElement) {
+		toPng(posterElement).then((png) => {
 			posterPreview = png;
 		});
 	}
@@ -30,6 +36,9 @@
 		})
 	);
 </script>
+
+<PosterElement hidden={true} on:rerender={updatePoster} bind:html={posterElement} {album}
+></PosterElement>
 
 <div class="flex h-full w-full items-center justify-center p-8">
 	<div

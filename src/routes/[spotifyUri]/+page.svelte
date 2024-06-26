@@ -1,9 +1,5 @@
 <script lang="ts">
-	import Poster from '$lib/components/A4_poster.svelte';
-
-	import PosterPreview from '$lib/components/posterPreview.svelte';
-
-	let poster: HTMLElement;
+	import Poster from '$lib/components/Poster.svelte';
 
 	import type { PageData } from './$types';
 
@@ -13,6 +9,4 @@
 	const album = data.items;
 </script>
 
-<PosterPreview originalPoster={poster}></PosterPreview>
-
-<Poster hidden={true} bind:html={poster} {album}></Poster>
+<Poster {album}></Poster>

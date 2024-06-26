@@ -37,6 +37,7 @@
 	"type": "module",
 	"dependencies": {
 		"@spotify/web-api-ts-sdk": "^1.2.0",
+		"color.js": "^1.2.0",
 		"html-to-image": "^1.11.11",
 		"vanilla-tilt": "^1.8.1"
 	}
