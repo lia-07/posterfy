@@ -40,13 +40,11 @@
 <PosterElement hidden={true} on:rerender={updatePoster} bind:html={posterElement} {album}
 ></PosterElement>
 
-<div class="flex h-full w-full items-center justify-center p-8">
-	<div
-		bind:this={posterPreviewContainer}
-		class="asepct-[1/1.41] h-full overflow-clip rounded-md drop-shadow-xl"
-	>
-		{#if posterPreview}
-			<img class="h-full" src={posterPreview} alt="Preview" />
-		{/if}
-	</div>
+<div
+	bind:this={posterPreviewContainer}
+	class="asepct-[1/1.41] h-3/4 overflow-clip rounded-md drop-shadow-xl"
+>
+	{#if posterPreview}
+		<img class="h-full" src={posterPreview} alt="Preview" />
+	{/if}
 </div>

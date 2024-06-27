@@ -1,5 +1,5 @@
 <script>
-	let spotifyUri = '';
+	let spotifyLink = '';
 </script>
 
 <div class="flex h-full w-full items-center justify-center">
@@ -8,14 +8,19 @@
 
 		<form
 			on:submit|preventDefault={() => {
-				window.location.href = `http://localhost:5173/${spotifyUri}`;
+				let spotifyUri = spotifyLink.match(/album\/([a-zA-Z0-9]{22})/);
+				if (spotifyUri) {
+					window.location.href = `http://localhost:5173/${spotifyUri[1]}`;
+				} else {
+					alert('Invalid Spotify link');
+				}
 			}}
 		>
 			<input
 				class="w-full border border-stone-800 bg-stone-50 bg-transparent px-4 py-2 outline-none transition-all placeholder:text-stone-400"
-				placeholder="Enter a valid Spotify Album URI"
+				placeholder="Enter a valid Spotify Album Link"
 				type="text"
-				bind:value={spotifyUri}
+				bind:value={spotifyLink}
 			/>
 		</form>
 	</div>
