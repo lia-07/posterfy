@@ -9,12 +9,9 @@
 
 	export let album: Album;
 
-	let scannableElement: HTMLElement;
+	const copyrights = album.copyrights[0].text;
 
-	$: {
-		dispatch('rerender', scannableElement);
-		console.log(scannableElement);
-	}
+	let scannableElement: HTMLElement;
 
 	let dispatch = createEventDispatcher();
 	let dominantColours = ['#ccc', '#ccc', '#ccc'];
@@ -46,7 +43,7 @@
 				console.log(bgColour);
 
 				let scannableUrl = `
-https://scannables.scdn.co/uri/plain/png/${bgColour}/${parseInt(bgColour, 16) > 0xffffff / 2 ? 'black' : 'white'}/640/${album.uri}`;
+https://scannables.scdn.co/uri/plain/png/${bgColour}/${parseInt(bgColour, 16) > 0xffffff / 1.1 ? 'black' : 'white'}/640/${album.uri}`;
 				console.log(scannableUrl);
 				scannable = await fetchImage(scannableUrl);
 			} catch (error) {
@@ -155,7 +152,9 @@ https://scannables.scdn.co/uri/plain/png/${bgColour}/${parseInt(bgColour, 16) > 
 			<div
 				class="flex h-[12mm] w-1/2 flex-col justify-end gap-0 font-sans text-[3mm] leading-[3mm] opacity-50 [&>*]:text-ellipsis"
 			>
-				<span class="line-clamp-2 text-ellipsis">{album.copyrights[0].text}</span>
+				<span class="line-clamp-2 text-ellipsis"
+					>{copyrights.charAt(0) === '©' ? copyrights : '© ' + copyrights}</span
+				>
 				<span>Content sourced from Spotify.</span>
 			</div>
 			{#if scannable}
