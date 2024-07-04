@@ -25,9 +25,12 @@
 				chunkedTracklist.push(tracklist.slice(i, i + 7));
 			}
 		}
-		prominent(album.images[0].url, { amount: 3, format: 'hex', group: 50 }).then(async (color) => {
+		prominent(album.images[0].url, { amount: 3, format: 'hex', group: 48 }).then(async (color) => {
 			if (Array.isArray(color) && color.every((item) => typeof item === 'string')) {
-				dominantColours = color;
+				dominantColours = color.sort(
+					(a, b) =>
+						(parseInt(b.replace('#', ''), 16) % 256) - (parseInt(a.replace('#', ''), 16) % 256)
+				);
 			} else if (typeof color == 'string') {
 				dominantColours = dominantColours.fill(color);
 			}
@@ -43,7 +46,7 @@
 				console.log(bgColour);
 
 				let scannableUrl = `
-https://scannables.scdn.co/uri/plain/png/${bgColour}/${parseInt(bgColour, 16) > 0xffffff / 1.1 ? 'black' : 'white'}/640/${album.uri}`;
+https://scannables.scdn.co/uri/plain/png/${bgColour}/${parseInt(bgColour, 16) > 0xffffff / 1.6 ? 'black' : 'white'}/640/${album.uri}`;
 				console.log(scannableUrl);
 				scannable = await fetchImage(scannableUrl);
 			} catch (error) {
@@ -98,7 +101,7 @@ https://scannables.scdn.co/uri/plain/png/${bgColour}/${parseInt(bgColour, 16) > 
 			>
 		</div>
 
-		<div class=" flex items-center justify-between">
+		<div class=" flex items-center justify-between gap-[2mm]">
 			<div class="flex h-fit flex-1 items-center gap-[4mm] pt-[2mm]">
 				<div class="flex h-[8mm] gap-[1mm]">
 					<div
@@ -115,7 +118,7 @@ https://scannables.scdn.co/uri/plain/png/${bgColour}/${parseInt(bgColour, 16) > 
 					></div>
 				</div>
 				<div class=" text-[7mm] leading-[7mm]">
-					<span class="  -mb-[0.5mm] line-clamp-1 w-full text-ellipsis pb-[0.5mm]">
+					<span class="-mb-[0.5mm] line-clamp-1 w-full text-ellipsis pb-[0.5mm]">
 						{album.release_date.substring(0, 4)}
 						{album.album_type} &mdash; {album.artists.reduce(
 							(str, artist, index) => (index === 0 ? artist.name : `${str}, ${artist.name}`),
@@ -124,7 +127,7 @@ https://scannables.scdn.co/uri/plain/png/${bgColour}/${parseInt(bgColour, 16) > 
 					</span>
 				</div>
 			</div>
-			<span class="pt-[1mm] text-[6mm] italic leading-[6mm] opacity-80"
+			<span class="pt-[3mm] text-[6mm] italic leading-[6mm] opacity-80"
 				>{album.total_tracks !== 1 ? `${album.total_tracks} songs` : '1 song'}, {Math.round(
 					album.tracks.items.reduce((sum, track) => track.duration_ms + sum, 0) / (1000 * 60)
 				)}m</span

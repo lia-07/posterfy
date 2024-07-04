@@ -29,7 +29,6 @@
 	onMount(() =>
 		tilt.init(posterPreviewContainer, {
 			max: 7,
-			reverse: true,
 			speed: 1500,
 			glare: true,
 			'max-glare': 0.5
