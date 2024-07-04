@@ -25,7 +25,7 @@
 				chunkedTracklist.push(tracklist.slice(i, i + 7));
 			}
 		}
-		prominent(album.images[0].url, { amount: 3, format: 'hex', group: 48 }).then(async (color) => {
+		prominent(album.images[0].url, { amount: 3, format: 'hex', group: 53 }).then(async (color) => {
 			if (Array.isArray(color) && color.every((item) => typeof item === 'string')) {
 				dominantColours = color.sort(
 					(a, b) =>
@@ -46,7 +46,7 @@
 				console.log(bgColour);
 
 				let scannableUrl = `
-https://scannables.scdn.co/uri/plain/png/${bgColour}/${parseInt(bgColour, 16) > 0xffffff / 1.6 ? 'black' : 'white'}/640/${album.uri}`;
+https://scannables.scdn.co/uri/plain/png/${bgColour}/${parseInt(bgColour, 16) > 0xffffff / 1.4 ? 'black' : 'white'}/640/${album.uri}`;
 				console.log(scannableUrl);
 				scannable = await fetchImage(scannableUrl);
 			} catch (error) {
