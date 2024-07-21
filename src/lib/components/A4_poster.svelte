@@ -25,7 +25,7 @@
 				chunkedTracklist.push(tracklist.slice(i, i + 7));
 			}
 		}
-		prominent(album.images[0].url, { amount: 3, format: 'hex', group: 53 }).then(async (color) => {
+		prominent(album.images[0].url, { amount: 3, format: 'hex', group: 64 }).then(async (color) => {
 			if (Array.isArray(color) && color.every((item) => typeof item === 'string')) {
 				dominantColours = color.sort(
 					(a, b) =>
