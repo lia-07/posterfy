@@ -8,7 +8,7 @@ This project is currently unfinished; I plan on improving the UI, adding more st
 
 1. Clone this repository.
 2. Ensure you have [pnpm](https://pnpm.io/) installed.
-3. In the project directory, run `pnpm install` and them `pnpm dev`.
+3. In the project directory, run `pnpm install` and then `pnpm dev`.
 4. Go to the localhost address that it says in a browser (usually this is http://localhost:5173).
 
 ## Examples
